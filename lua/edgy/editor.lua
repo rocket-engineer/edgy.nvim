@@ -121,27 +121,31 @@ function M.select(pos, filter)
       end
     end
   end
-  vim.ui.select(
-    wins,
-    {
-      prompt = "Select Edgy Window:",
-      ---@param w Edgy.Window
-      format_item = function(w)
-        local title = w.view.get_title()
-        if pos == nil then
-          title = "[" .. w.view.edgebar.pos .. "] " .. title
+  if #wins == 1 then
+    wins[1]:focus()
+  else
+    vim.ui.select(
+      wins,
+      {
+        prompt = "Select Edgy Window:",
+        ---@param w Edgy.Window
+        format_item = function(w)
+          local title = w.view.get_title()
+          if pos == nil then
+            title = "[" .. w.view.edgebar.pos .. "] " .. title
+          end
+          return title
+        end,
+        kind = "edgy.window",
+      },
+      ---@param win? Edgy.Window
+      function(win)
+        if win then
+          win:focus()
         end
-        return title
-      end,
-      kind = "edgy.window",
-    },
-    ---@param win? Edgy.Window
-    function(win)
-      if win then
-        win:focus()
       end
-    end
-  )
+    )
+  end
 end
 
 -- Move the cursor to the last entered main window
